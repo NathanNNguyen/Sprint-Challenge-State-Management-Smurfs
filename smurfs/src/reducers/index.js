@@ -15,6 +15,20 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         smurfs: action.payload
+      };
+
+    case 'ADD_SMURF':
+      return {
+        ...state,
+        smurfs: [
+          ...state.smurfs,
+          {
+            name: action.payload,
+            age: action.payload,
+            height: action.payload,
+            id: Date.now()
+          }
+        ]
       }
 
     default:
