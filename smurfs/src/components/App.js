@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 
 import { connect } from 'react-redux';
-import { fetchData } from '../actions';
-import { add } from '../actions/add';
+import { fetchData, submitData } from '../actions';
 
 const mapStateToProps = state => {
   return {
@@ -11,28 +10,21 @@ const mapStateToProps = state => {
   }
 }
 
-const App = ({ smurfs, fetchData, add }) => {
+const App = ({ smurfs, fetchData, submitData }) => {
   // console.log(smurfs)
+
+  const [newSmurf, setNewSmurf] = useState({ name: '', age: '', height: '' })
+
+  const handleChange = e => {
+    setNewSmurf({ ...newSmurf, [e.target.name]: e.target.value })
+  }
 
   const handleSubmit = e => {
     e.preventDefault();
-    add();
-    setName('');
-    setAge('');
-    setHeight('');
+    submitData(newSmurf);
+    setNewSmurf({ name: '', age: '', height: '' })
+    fetchData();
   }
-  const nameHandle = e => {
-    setName(e.target.value);
-  }
-  const ageHandle = e => {
-    setAge(e.target.value)
-  }
-  const heightHandle = e => {
-    setHeight(e.target.value)
-  }
-  const [name, setName] = useState('');
-  const [age, setAge] = useState('');
-  const [height, setHeight] = useState('');
 
   return (
     <div className="App">
@@ -46,16 +38,27 @@ const App = ({ smurfs, fetchData, add }) => {
         </div>
       ))}
       <form onSubmit={handleSubmit}>
-        <div>Add a new smurf to the village</div>
-        <input type='name' id='name' placeholder='Name' value={name} onChange={nameHandle} />
-        <input type='age' id='age' placeholder='Age' value={age} onChange={ageHandle} />
-        <input type='height' id='height' placeholder='Height(cm)' value={height} onChange={heightHandle} />
-        <button type='submit'>Add to the smurfs</button>
+        <input
+          name="name"
+          type="text"
+          placeholder="Name"
+          onChange={handleChange} />
+        <input
+          name="age"
+          type="number"
+          placeholder="Age"
+          onChange={handleChange} />
+        <input
+          name="height"
+          type="text"
+          placeholder="Height (cm)"
+          onChange={handleChange} />
+        <button>Submit Smurf</button>
       </form>
     </div>
   );
 }
 
 export default connect(
-  mapStateToProps, { fetchData, add }
+  mapStateToProps, { fetchData, submitData }
 )(App);
